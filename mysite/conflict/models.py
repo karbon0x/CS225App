@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class User_mod(models.Model):
     user = models.OneToOneField(User)
-    reason = models.CharField(max_length = 1000)
-    decision = models.BooleanField(default = False)
-
-# Create your models here.
+    zipcode = models.FloatField(blank=False, default=00000)
+    address = models.CharField(max_length=200, blank=False)
+    city = models.CharField(max_length=50, blank=False)
+    state = models.CharField(max_length=50, blank=False)

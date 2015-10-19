@@ -54,9 +54,35 @@ def user_login(request):
 
 @login_required
 def index(request):
+    if request.method == 'POST':
+         user_form = sign_up_acc(data=request.POST)
+         if user_form.is_valid():
+            user1 = user_form.save(commit = False)
+            user1.user = request.user
+            user1.save()
+            return HttpResponseRedirect('/success/')
+    else:
+        if request.user.is_authenticated():
+            username = request.user.username
+            ab = User_mod.objects.filter(user = request.user)
+            if len(ab)>0:
+                if ab[0].reason != 'Blank':
+                    return HttpResponseRedirect('/success/')
+            else:
+                conflict_form = sign_up_acc()
+                return render(request, 'index.html', {'obj': username,'for':conflict_form})
+
+@login_required
+def success(request):
     if request.user.is_authenticated():
         username = request.user.username
-    return render(request, 'index.html', {'obj': username})
+    return render(request, 'success.html', {'obj': username})
+@login_required
+def decision(request):
+    if request.user.is_authenticated():
+        username = request.user.username
+    dec = User_mod.objects.filter(user = request.user)
+    return render(request, 'decision.html', {'obj': username,'decision':dec[0]})
 
 @login_required
 def user_logout(request):
